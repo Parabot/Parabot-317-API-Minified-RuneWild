@@ -1,0 +1,56 @@
+language: java
+
+dist: trusty
+
+jdk:
+  - openjdk7
+  - oraclejdk8
+
+before_install:
+  - chmod +x ./.travis/maven-build.sh
+  - chmod +x ./.travis/call-creation.sh
+  - mvn clean
+
+install:
+  - sudo apt-get update && sudo apt-get --assume-yes install zip unzip
+
+script: "./.travis/maven-build.sh"
+
+after_deploy: "./.travis/call-creation.sh"
+
+notifications:
+  email: false
+  slack:
+    secure: iQTmrhir+jjTrFLjwhllQuRWd12UgNfVGZW8K7yrQQ6ckAOXyxdYVj7ppAh7qGmnIbIVDQuEZoMW2ctTt0GbWUf8Z7iyucuuIJq77cBQ6mg5DNegoLJsK7dFPll1v+bJnuR+955X2uLko4UcEDNge8A0wapVj388wVoCWCJIjaROVLbdAO1dPZZsBMg/aGA44d+q0askg+YUaoW/orhdE9jX2OkMW8U6g1N8kJKJiD0Rqi6D/FafEN5V+cJKOUVSoBuBHWL0aKCatzJ4bOu3J0T70YLdCpNOk/1FK7dCIOrUUhAlwnc5sGXwbrH/TIhpEEUivEff9LxHs4PbJAu9NuVWUGrpPqKGEYOEFRgsmNZU7q9U3obviPFqn7IsPUQI8bEsjfoa+2E7Yp1WZ5k1I5dp+VVFpmzXIbPczz0g+alpuqETXno/EBziniwcCXcG+p1SJzEAfFR9BLDCCQ+/x086S4owEuAsc9NpkQu0YL1p755p5QM51Iu/aKxkjLWr5iDlnc9CHaqxFn63+iP43qnUATySSmnoCAgkkhZgXL3g+6xQtANY5ACdqxyAt5cGwK8CJv05H2CBNFv8J8FCvkZQ8/U2ljaWu49GzU/SxWA7pDsdVtew+S7zLnDhOE2qp/XBVRjUnbOKNXngUVww7PQ9ziY4a0D9Cs82y588Lso=
+  webhooks:
+    on_success: always
+    on_failure: always
+    on_start: never
+
+env:
+  global:
+    - PROVIDER_VERSION=2.0.1
+
+cache:
+  directories:
+    - ".autoconf"
+    - "$HOME/.m2"
+
+deploy:
+  - provider: s3
+    access_key_id: AKIAJDZLZNH2PIKHUKOA
+    secret_access_key:
+      secure: BNwTSh+mwS+6E9BKw1+FZEvWlWzDIOmXxvLu8mbqe5SnpYoKlfHbkUIZIn5WHJn6Mh0yxtC9/vR7cjnILM5lYXxecN5Vp4wa7pYpX2+dT1RMw6qPtzvQFGQbXH5eoGXx0tBg/9SPtJkRyufpBrkixuIwDHk45F/0n/JxG2RvWf3icY3j9PWUZmRPOChk5CqfPhj9dDNTBxgekUQkpgcq9lnp3gObyF2yxNupRYvpMO7aZrm5Xgm2TuvG996CYyvrG2pKm/Xptw3ZOPtErDmfXPwcx1mMeBcKLC7C9jU0HnUfPIfOGA46fjD8hPbdqzeoxwuOWiSmrChvfZVxKFeOZmdCgXAOXRv+DROEq1WOFVgPy60FIcDQyGbZrZTyv4pOulnPCHOWsmqrTDuJcnZvUV3Gk4phijk8byc6pysazYeaXyQxwXH/dL6QOHzqLpqiwS6JrtToD1/rErgj9fkUM3UHQkyTTGBlhk5uVOy5PEabIXK0hJ+5MDE0s4s3qAFfEGUZBSE0svLc/4lvxGe1Q3pYbP8vhmXSnDGX+JllmUQnfSEneQgdt10pvKsOBAv+8ar8b/k/yxmfJHHeFKqAO1BDnEET8yDri26YPz/a0zL2GR6zSHpFjhjO6T1XDfmmFcCNKVOBVPrv+SG5q8GHBIKxOzmBLSN37K6xu+FYSew=
+    bucket: parabot
+    skip_cleanup: true
+    local-dir: "./target/final/"
+    upload-dir: artifacts/runewild-provider
+    region: us-west-1
+    detect_encoding: true
+    acl: public_read
+    on:
+      repo: Parabot/Parabot-317-API-Minified-RuneWild
+      branch:
+        - master
+        - development
+      jdk: 'openjdk7'
