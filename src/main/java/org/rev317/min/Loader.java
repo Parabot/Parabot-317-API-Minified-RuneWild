@@ -1,11 +1,8 @@
 package org.rev317.min;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 import org.parabot.core.Context;
 import org.parabot.core.Core;
 import org.parabot.core.Directories;
-import org.parabot.core.asm.ASMClassLoader;
 import org.parabot.core.asm.adapters.AddInterfaceAdapter;
 import org.parabot.core.asm.hooks.HookFile;
 import org.parabot.core.desc.ServerProviderInfo;
