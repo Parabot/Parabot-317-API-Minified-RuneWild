@@ -1,11 +1,8 @@
 package org.rev317.min;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 import org.parabot.core.Context;
 import org.parabot.core.Core;
 import org.parabot.core.Directories;
-import org.parabot.core.asm.ASMClassLoader;
 import org.parabot.core.asm.adapters.AddInterfaceAdapter;
 import org.parabot.core.asm.hooks.HookFile;
 import org.parabot.core.desc.ServerProviderInfo;
@@ -31,34 +28,27 @@ import java.net.URL;
 public class Loader extends ServerProvider {
     private boolean extended = true;
 
-    private static Client client = null;
-
+    /**
+     * Static accessor for Client. Used by Randoms module.
+     * @return
+     */
     public static Client getClient() {
-        if (client == null) {
-            Objenesis objenesis = new ObjenesisStd();
-
-            try {
-                client = (Client) objenesis.newInstance(Context.getInstance().getASMClassLoader().loadClass("com.rw.client.rs.Client"));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return client;
+        return (Client)Context.getInstance().getClient();
     }
 
+    /**
+     * Called once, fetches a new Applet instance which is the entry point to run the RSPS client.
+     * @return
+     */
     @Override
     public Applet fetchApplet() {
         try {
-            final Context        context     = Context.getInstance();
-            final ASMClassLoader classLoader = context.getASMClassLoader();
-            final Class<?>       clientClass = classLoader.loadClass(Context.getInstance().getServerProviderInfo().getClientClass());
-            Object               instance    = clientClass.newInstance();
-
+            Class<?> clazz = Context.getInstance().getASMClassLoader().loadClass("com.rw.client.rs.Client");
+			final Class<?> arg1 = Context.getInstance().getASMClassLoader().loadClass("com.rw.client.EmbedPanel");
+			Object instance = clazz.getDeclaredConstructor(arg1).newInstance(new Object[] {null});
             return (Applet) instance;
         } catch (Exception e) {
             e.printStackTrace();
-
             return null;
         }
     }
