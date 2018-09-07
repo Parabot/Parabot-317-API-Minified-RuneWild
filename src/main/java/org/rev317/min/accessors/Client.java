@@ -37,6 +37,8 @@ public interface Client {
 
     int[] getMenuActionId();
 
+    long[] getMenuHash();
+
     int[] getMenuAction1();
 
     int[] getMenuAction2();
