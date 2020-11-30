@@ -59,7 +59,7 @@ public interface Client {
 
     void dropClient();
 
-    void login(String username, String password, boolean reconnecting);
+    void login(boolean reconnecting, String emailAddress, String username, String password);
 
     int[] getCurrentStats();
 
