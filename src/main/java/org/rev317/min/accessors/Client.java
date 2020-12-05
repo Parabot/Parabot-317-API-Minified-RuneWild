@@ -37,6 +37,8 @@ public interface Client {
 
     int[] getMenuActionId();
 
+    long[] getMenuHash();
+
     int[] getMenuAction1();
 
     int[] getMenuAction2();
@@ -57,7 +59,7 @@ public interface Client {
 
     void dropClient();
 
-    void login(String username, String password, boolean reconnecting);
+    void login(boolean reconnecting, String emailAddress, String username, String password);
 
     int[] getCurrentStats();
 
